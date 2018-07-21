@@ -22,25 +22,9 @@ uses Config.Static, Providers.Session;
 
 procedure TLoginResource.Get(const AContext: TEndpointContext;
   const ARequest: TEndpointRequest; const AResponse: TEndpointResponse);
-const
-  JSON_SESSION = '{"redirect_url": "%s", "client_id": "%s"}';
 var
-  LJsonString: string;
-  LJson: TJSONValue;
   LHtml: TMemoryStream;
-  LClientId, LRedirectUrl, LSessionId: string;
-  AJson: TArray<TJSONPair>;
 begin
-  ARequest.Params.TryGetValue('redirect_uri', LRedirectUrl);
-  ARequest.Params.TryGetValue('client_id', LClientId);
-
-  LSessionId := TProviderSession.GetSessionId;
-  AResponse.Headers.SetValue('Set-Cookie', 'SESSION_ID=' + LSessionId);
-
-  LJsonString := Format(JSON_SESSION, [LRedirectUrl, LClientId]);
-  LJson := TJSONObject.ParseJSONValue(LJsonString);
-  TProviderSession.SetSession(LSessionId, TJSONObject(LJson));
-
   LHtml := TMemoryStream.Create;
   LHtml.LoadFromFile(TConfigStatic.GetPath('login.html'));
   AResponse.Body.SetStream(LHtml, 'text/html', true);
