@@ -1,0 +1,35 @@
+version: '2.1'
+
+services:
+  service:
+    image: hunsche/delphi-dev
+    privileged: true
+    environment: 
+      PA_SERVER_PASSWORD: 'rad-tdc2018'
+      RAD_SERVER_DB_PATH: '192.168.56.1/3050:C:/Users/Public/Documents/Embarcadero/EMS/emsserver.ib'
+      RAD_SERVER_DB_USERNAME: 'sysdba'
+      RAD_SERVER_DB_PASSWORD: 'masterkey'
+      RAD_SERVER_SERVER_PORT: '8080'
+      RAD_SERVER_CONSOLE: 'true'
+      RAD_SERVER_CONSOLE_USER: 'admin'
+      RAD_SERVER_CONSOLE_PASS: 'rad-tdc2018'
+      RAD_SERVER_CONSOLE_PORT: '8081'
+      STATIC_PATH: '/app/src/static'
+      REDIS_HOST: 'redis'
+      REDIS_PORT: '6379'
+    links:
+      - redis:redis
+    ports:
+      - '8080:8080'
+      - '8081:8081'
+      - '64211:64211'
+    volumes:
+      - .:/app
+    command: waitforit -address=tcp://192.168.56.1:3050 -timeout=10 -- start
+
+  redis:
+    image: redis:3
+    
+volumes:
+  pg-data:
+  pgadmin-data:

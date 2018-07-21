@@ -1,0 +1,3 @@
+[submodule "src/modules/delphiredisclient"]
+	path = src/modules/delphiredisclient
+	url = https://github.com/danieleteti/delphiredisclient.git
